@@ -9,23 +9,22 @@
 #include <cmath>
 using namespace std;
 
-int main()
+string getUserInput()
 {
     string userInput{};
-    bool inputVerified{false};
-    int day{};
-    int month{};
-    int year{};
 
     // Setup and getting initial user input
     cout << "Passcode Generator" << endl;
     cout << "Please enter a date in the ddmmyyyy format: ";
     cin >> userInput;
+    return userInput;
+}
 
+bool inputCheck(bool isDateValid, string userInput, int day, int month, int year)
+{
     // User input verification
-    while (!inputVerified)
+    while (!isDateValid)
     {
-
         // Input length check
         if (userInput.size() != 8)
         {
@@ -34,12 +33,8 @@ int main()
             continue;
         }
 
-        int userInputDay = stoi(userInput.substr(0, 2));
-        int userInputMonth = stoi(userInput.substr(2, 2));
-        int userInputYear = stoi(userInput.substr(4, 4));
-
         // Day out of range check
-        if (userInputDay <= 0 || userInputDay > 31)
+        if (day <= 0 || day > 31)
         {
             cout << "Your day must be between 01 and 31. Please enter a valid date in the ddmmyyyy format:" << endl;
             cin >> userInput;
@@ -47,7 +42,7 @@ int main()
         }
 
         // Month out of range check
-        if (userInputMonth <= 0 || userInputMonth > 12)
+        if (month <= 0 || month > 12)
         {
             cout << "Your month must be between 01 and 12. Please enter a valid date in the ddmmyyyy format:" << endl;
             cin >> userInput;
@@ -55,50 +50,53 @@ int main()
         }
 
         // Year check
-        if (userInputYear < 1900)
+        if (year < 1900)
         {
             cout << "Let's be honest, you're probably not over 120 years old. Please enter a valid date in the ddmmyyyy format:" << endl;
             cin >> userInput;
             continue;
         }
 
-        inputVerified = true;
+        isDateValid = true;
 
-        // Passes values to variables in main
-        day = userInputDay;
-        month = userInputMonth;
-        year = userInputYear;
-
-        break;
+        return isDateValid;
     }
-    
-    // Result calculation
-    if (inputVerified)
-    {
-        string exitInput{};
+}
 
-        int result = floor((((day * 7 + month * 11 + year) * day) - 19) / month); 
-        cout << "Passcode is " << result << endl;
-    }
+int calculatePasscode(int day, int month, int year)
+{
+    int result = floor((((day * 7 + month * 11 + year) * day) - 19) / month);
+    return result;
+}
 
-    bool exit{false};
-    string exitInput{};
+bool exitCheck()
+{
+    string exitInput;
+    cout << "To exit this program, type exit: ";
+    cin >> exitInput;
+
+    return (exitInput == "exit" || exitInput == "Exit" || exitInput == "EXIT") ?  true :  false;
+}
+
+int main()
+{
+    bool inputVerified{false};
+    string userInput = getUserInput();
+    int userInputDay = stoi(userInput.substr(0, 2));
+    int userInputMonth = stoi(userInput.substr(2, 2));
+    int userInputYear = stoi(userInput.substr(4, 4));
+    bool canExit{false};
+
+    // Checks input
+    inputVerified = inputCheck(inputVerified, userInput, userInputDay, userInputMonth, userInputYear);
+    // Calculates passcode
+    int passcode = calculatePasscode(userInputDay, userInputMonth, userInputYear);
+    cout << "Passcode is " << passcode << endl;
 
     // Exit check
-    while (!exit)
+    while (!canExit)
     {
-        cout << "To exit this program, type exit" << endl;
-        cin >> exitInput;
-
-        if (exitInput == "exit" || exitInput == "Exit" || exitInput == "EXIT")
-        {
-            break;
-        }
-
-        else
-        {
-            continue;
-        }
+        canExit = exitCheck();
     }
 
     return 0;
