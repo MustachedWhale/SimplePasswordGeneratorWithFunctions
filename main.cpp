@@ -20,8 +20,10 @@ string getUserInput()
     return userInput;
 }
 
-bool inputCheck(bool isDateValid, string userInput, int day, int month, int year)
+bool inputCheck(string userInput, int day, int month, int year)
 {
+    bool isDateValid{false};
+
     // User input verification
     while (!isDateValid)
     {
@@ -58,9 +60,9 @@ bool inputCheck(bool isDateValid, string userInput, int day, int month, int year
         }
 
         isDateValid = true;
-
-        return isDateValid;
     }
+
+    return isDateValid;
 }
 
 int calculatePasscode(int day, int month, int year)
@@ -88,7 +90,7 @@ int main()
     bool canExit{false};
 
     // Checks input
-    inputVerified = inputCheck(inputVerified, userInput, userInputDay, userInputMonth, userInputYear);
+    inputVerified = inputCheck(userInput, userInputDay, userInputMonth, userInputYear);
     // Calculates passcode
     int passcode = calculatePasscode(userInputDay, userInputMonth, userInputYear);
     cout << "Passcode is " << passcode << endl;
