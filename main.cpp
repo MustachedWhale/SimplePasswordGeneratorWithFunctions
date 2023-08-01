@@ -20,13 +20,17 @@ string getUserInput()
     return userInput;
 }
 
-bool inputCheck(string userInput, int day, int month, int year)
+bool inputCheck(string userInput)
 {
     bool isDateValid{false};
 
     // User input verification
     while (!isDateValid)
     {
+        int day = stoi(userInput.substr(0, 2));
+        int month = stoi(userInput.substr(2, 2));
+        int year = stoi(userInput.substr(4, 4));
+
         // Input length check
         if (userInput.size() != 8)
         {
@@ -65,8 +69,12 @@ bool inputCheck(string userInput, int day, int month, int year)
     return isDateValid;
 }
 
-int calculatePasscode(int day, int month, int year)
+int calculatePasscode(string userInput)
 {
+    int day = stoi(userInput.substr(0, 2));
+    int month = stoi(userInput.substr(2, 2));
+    int year = stoi(userInput.substr(4, 4));
+
     int result = floor((((day * 7 + month * 11 + year) * day) - 19) / month);
     return result;
 }
@@ -82,17 +90,15 @@ bool exitCheck()
 
 int main()
 {
-    bool inputVerified{false};
     string userInput = getUserInput();
-    int userInputDay = stoi(userInput.substr(0, 2));
-    int userInputMonth = stoi(userInput.substr(2, 2));
-    int userInputYear = stoi(userInput.substr(4, 4));
+    bool inputVerified{false};
     bool canExit{false};
 
     // Checks input
-    inputVerified = inputCheck(userInput, userInputDay, userInputMonth, userInputYear);
+    inputVerified = inputCheck(userInput);
+
     // Calculates passcode
-    int passcode = calculatePasscode(userInputDay, userInputMonth, userInputYear);
+    int passcode = calculatePasscode(userInput);
     cout << "Passcode is " << passcode << endl;
 
     // Exit check
