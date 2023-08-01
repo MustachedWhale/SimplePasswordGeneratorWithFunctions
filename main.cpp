@@ -3,6 +3,29 @@
 - Checks to see whether the date is valid
 - Passes the date into a formula 
 - Returns the passcode to the user
+
+Dates to test inputCheck()
+IL
+010820223
+DOOR
+00082023
+32082023
+D31
+31022023
+31042023
+31062023
+31092023
+31112023
+MOOR
+01002023
+01132023
+LY
+29022012 (should pass)
+30022012
+28022023 (should pass)
+29022023
+Y
+01081899
 */
 
 #include <iostream>
@@ -15,14 +38,25 @@ string getUserInput()
 
     // Setup and getting initial user input
     cout << "Passcode Generator" << endl;
-    cout << "Please enter a date in the ddmmyyyy format: ";
+    cout << "Please enter a date using the ddmmyyyy format: ";
     cin >> userInput;
     return userInput;
 }
 
 bool inputCheck(string userInput)
 {
+    /*
+    - Check that there are 8 digits Y
+    - Check that the day is greater than 0 but less than 31 Y
+    - Check that the day is not 31 if the month is not January(01), March(03), May(05), July(07), August(08), October(10), December(12) Y
+    - Check that the month is greater than 0 and less than 12
+    - If the month is February, check whether the year is a leap year. If yes, check that the day is not more than 29. If no, check that the day is not more than 28 Y
+    - Check that the year is after 1900
+    */
+
     bool isDateValid{false};
+    int longMonthArray[7] = {1, 3, 5, 7, 8, 10, 12};
+    bool longMonth{false};
 
     // User input verification
     while (!isDateValid)
@@ -34,7 +68,8 @@ bool inputCheck(string userInput)
         // Input length check
         if (userInput.size() != 8)
         {
-            cout << "Please enter a date in the ddmmyyyy format: ";
+            cout << "Your date contains more than 8 digits" << endl;
+            cout << "Please enter a date using the ddmmyyyy format: ";
             cin >> userInput;
             continue;
         }
@@ -42,23 +77,82 @@ bool inputCheck(string userInput)
         // Day out of range check
         if (day <= 0 || day > 31)
         {
-            cout << "Your day must be between 01 and 31. Please enter a valid date in the ddmmyyyy format:" << endl;
+            cout << "Your day must be between 01 and 31." << endl;
+            cout << "Please enter a valid date using the ddmmyyyy format: ";
             cin >> userInput;
             continue;
         }
 
+        // Check for day 31 in the correct month
+        if (day == 31)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                if (month == longMonthArray[i])
+                {
+                    longMonth = true;
+                    break;
+                }
+            }
+
+            if (!longMonth)
+            {
+                cout << "The month you entered doesn't have 31 days." << endl;
+                cout << "Please enter a valid date using the ddmmyyyy format:";
+                cin >> userInput;
+                continue;
+            }
+        }
+        
+
         // Month out of range check
         if (month <= 0 || month > 12)
         {
-            cout << "Your month must be between 01 and 12. Please enter a valid date in the ddmmyyyy format:" << endl;
+            cout << "Your month must be between 01 and 12." << endl;
+            cout << "Please enter a valid date using the ddmmyyyy format:";
             cin >> userInput;
             continue;
+        }
+
+        // Leap year check
+        if (month == 2)
+        {
+            // If the year is a leap year
+            if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
+            {
+                if (day <= 29)
+                {
+                    // Pass
+                }
+                else
+                {
+                    cout << "There are only 29 days in this month." << endl;
+                    cout << "Please enter a valid date using the ddmmyyyy format:";
+                    cin >> userInput;
+                    continue;
+                }
+            }
+            else
+            {
+                if (day <= 28)
+                {
+                    // Pass
+                }
+                else
+                {
+                    cout << "There are only 28 days in this month" << endl;
+                    cout << "Please enter a valid date in the ddmmyyyy format:";
+                    cin >> userInput;
+                    continue;
+                }
+            }
         }
 
         // Year check
         if (year < 1900)
         {
-            cout << "Let's be honest, you're probably not over 120 years old. Please enter a valid date in the ddmmyyyy format:" << endl;
+            cout << "Please enter a year after 1900." << endl;
+            cout << "Please enter a valid date in the ddmmyyyy format: ";
             cin >> userInput;
             continue;
         }
