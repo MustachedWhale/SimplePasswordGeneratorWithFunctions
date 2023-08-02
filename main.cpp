@@ -44,7 +44,6 @@ string getUserInput()
     string userInput{};
 
     // Get initial user input
-    //cin >> userInput;
     getline(cin, userInput);
     return userInput;
 }
@@ -56,9 +55,9 @@ bool inputCheck(string userInput)
     - Check that there are 8 digits Y
     - Check that the day is greater than 0 but less than 31 Y
     - Check that the day is not 31 if the month is not January(01), March(03), May(05), July(07), August(08), October(10), December(12) Y
-    - Check that the month is greater than 0 and less than 12
+    - Check that the month is greater than 0 and less than 12 Y
     - If the month is February, check whether the year is a leap year. If yes, check that the day is not more than 29. If no, check that the day is not more than 28 Y
-    - Check that the year is after 1900
+    - Check that the year is after 1900 Y
     */
 
     bool isDateValid{false};
@@ -71,9 +70,9 @@ bool inputCheck(string userInput)
         bool allDigits{true};
 
         // Checks whether characters entered are all numbers
-        for (int i = 1; i < userInput.size() - 1; i++)
+        for (int i = 0; i < userInput.size(); i++)
         {
-            if (!isdigit(i) || isspace(i))
+            if (!isdigit(userInput[i]) || isspace(userInput[i]))
             {
                 allDigits = false;
                 break; 
@@ -84,10 +83,7 @@ bool inputCheck(string userInput)
         {
             cout << "Your date contains characters that aren't numbers." << endl;
             cout << "Please enter a date using the ddmmyyyy format: ";
-            //cin >> userInput;
-            cin.clear();
-            getline(cin, userInput);
-            continue;
+            return isDateValid;
         }
 
         int day = stoi(userInput.substr(0, 2));
@@ -99,10 +95,7 @@ bool inputCheck(string userInput)
         {
             cout << "Your date contains more than 8 digits." << endl;
             cout << "Please enter a date using the ddmmyyyy format: ";
-            //cin >> userInput;
-            cin.clear();
-            getline(cin, userInput);
-            continue;
+            return isDateValid;
         }
 
         // Day out of range check
@@ -110,9 +103,7 @@ bool inputCheck(string userInput)
         {
             cout << "Your day must be between 01 and 31." << endl;
             cout << "Please enter a valid date using the ddmmyyyy format: ";
-            //cin >> userInput;
-            getline(cin, userInput);
-            continue;
+            return isDateValid;
         }
 
         // Check for day 31 in the correct month
@@ -131,9 +122,7 @@ bool inputCheck(string userInput)
             {
                 cout << "The month you entered doesn't have 31 days." << endl;
                 cout << "Please enter a valid date using the ddmmyyyy format: ";
-                //cin >> userInput;
-                getline(cin, userInput);
-                continue;
+                return isDateValid;
             }
         }
         
@@ -143,9 +132,7 @@ bool inputCheck(string userInput)
         {
             cout << "Your month must be between 01 and 12." << endl;
             cout << "Please enter a valid date using the ddmmyyyy format:";
-            //cin >> userInput;
-            getline(cin, userInput);
-            continue;
+            return isDateValid;
         }
 
         // Leap year check
@@ -162,9 +149,7 @@ bool inputCheck(string userInput)
                 {
                     cout << "There are only 29 days in this month." << endl;
                     cout << "Please enter a valid date using the ddmmyyyy format: ";
-                    //cin >> userInput;
-                    getline(cin, userInput);
-                    continue;
+                    return isDateValid;
                 }
             }
             else
@@ -177,9 +162,7 @@ bool inputCheck(string userInput)
                 {
                     cout << "There are only 28 days in this month." << endl;
                     cout << "Please enter a valid date in the ddmmyyyy format: ";
-                    //cin >> userInput;
-                    getline(cin, userInput);
-                    continue;
+                    return isDateValid;
                 }
             }
         }
@@ -189,9 +172,7 @@ bool inputCheck(string userInput)
         {
             cout << "Please enter a year after 1899." << endl;
             cout << "Please enter a valid date in the ddmmyyyy format: ";
-            //cin >> userInput;
-            getline(cin, userInput);
-            continue;
+            return isDateValid;
         }
 
         isDateValid = true;
@@ -224,16 +205,21 @@ int main()
 {
     bool inputVerified{false};
     bool canExit{false};
+    string userInput{};
 
-    // Greeting and get user input
+    // Greeting
     cout << "Passcode Generator." << endl;
     cout << "Please enter a date using the ddmmyyyy format: ";
-    string userInput = getUserInput();
 
-    // Checks input
-    inputVerified = inputCheck(userInput);
+    while (!inputVerified)
+    {
+        // Gets user input
+        userInput = getUserInput();
+        // Checks input
+        inputVerified = inputCheck(userInput);
+    }
 
-    // Calculates passcode
+    // Calculates and prints passcode
     int passcode = calculatePasscode(userInput);
     cout << "Passcode is " << passcode  << "." << endl;
 
