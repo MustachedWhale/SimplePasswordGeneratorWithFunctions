@@ -1,31 +1,36 @@
 /*
+-------------------------------------------------
+Program Specification
+-------------------------------------------------
 - Gets a date from the user
 - Checks to see whether the date is valid
 - Passes the date into a formula 
 - Returns the passcode to the user
-
+-------------------------------------------------
 Dates to test inputCheck()
-IL
-010820223
-DOOR
-00082023
-32082023
-D31
-31022023
-31042023
-31062023
-31092023
-31112023
-MOOR
-01002023
-01132023
-LY
-29022012 (should pass)
-30022012
-28022023 (should pass)
-29022023
-Y
-01081899
+-------------------------------------------------
+Input Length
+    010820223
+Day Out Of Range
+    00082023
+    32082023
+Long Month
+    31022023
+    31042023
+    31062023
+    31092023
+    31112023
+Month Out Of Range
+    01002023
+    01132023
+Leap Year
+    29022012 (should pass)
+    30022012
+    28022023 (should pass)
+    29022023
+Year
+    01081899
+-------------------------------------------------
 */
 
 #include <iostream>
@@ -36,9 +41,7 @@ string getUserInput()
 {
     string userInput{};
 
-    // Setup and getting initial user input
-    cout << "Passcode Generator" << endl;
-    cout << "Please enter a date using the ddmmyyyy format: ";
+    // Get initial user input
     cin >> userInput;
     return userInput;
 }
@@ -68,7 +71,7 @@ bool inputCheck(string userInput)
         // Input length check
         if (userInput.size() != 8)
         {
-            cout << "Your date contains more than 8 digits" << endl;
+            cout << "Your date contains more than 8 digits." << endl;
             cout << "Please enter a date using the ddmmyyyy format: ";
             cin >> userInput;
             continue;
@@ -98,7 +101,7 @@ bool inputCheck(string userInput)
             if (!longMonth)
             {
                 cout << "The month you entered doesn't have 31 days." << endl;
-                cout << "Please enter a valid date using the ddmmyyyy format:";
+                cout << "Please enter a valid date using the ddmmyyyy format: ";
                 cin >> userInput;
                 continue;
             }
@@ -127,7 +130,7 @@ bool inputCheck(string userInput)
                 else
                 {
                     cout << "There are only 29 days in this month." << endl;
-                    cout << "Please enter a valid date using the ddmmyyyy format:";
+                    cout << "Please enter a valid date using the ddmmyyyy format: ";
                     cin >> userInput;
                     continue;
                 }
@@ -140,8 +143,8 @@ bool inputCheck(string userInput)
                 }
                 else
                 {
-                    cout << "There are only 28 days in this month" << endl;
-                    cout << "Please enter a valid date in the ddmmyyyy format:";
+                    cout << "There are only 28 days in this month." << endl;
+                    cout << "Please enter a valid date in the ddmmyyyy format: ";
                     cin >> userInput;
                     continue;
                 }
@@ -151,7 +154,7 @@ bool inputCheck(string userInput)
         // Year check
         if (year < 1900)
         {
-            cout << "Please enter a year after 1900." << endl;
+            cout << "Please enter a year after 1899." << endl;
             cout << "Please enter a valid date in the ddmmyyyy format: ";
             cin >> userInput;
             continue;
@@ -184,16 +187,20 @@ bool exitCheck()
 
 int main()
 {
-    string userInput = getUserInput();
     bool inputVerified{false};
     bool canExit{false};
+
+    // Greeting and get user input
+    cout << "Passcode Generator." << endl;
+    cout << "Please enter a date using the ddmmyyyy format: ";
+    string userInput = getUserInput();
 
     // Checks input
     inputVerified = inputCheck(userInput);
 
     // Calculates passcode
     int passcode = calculatePasscode(userInput);
-    cout << "Passcode is " << passcode << endl;
+    cout << "Passcode is " << passcode  << "." << endl;
 
     // Exit check
     while (!canExit)
